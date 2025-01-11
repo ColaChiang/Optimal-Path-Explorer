@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Tourist Route Planner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        main {
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .map-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .map-container img {
+            width: 100%;
+            max-width: 700px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+        .form-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 80px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        footer {
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 20px;
+            background: #007BFF;
+            color: white;
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        async function calculateRoute() {
+            const maxSpots = document.getElementById('maxSpots').value;
+
+            const response = await fetch('/route', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ max_spots: maxSpots })
+            });
+
+            const result = await response.json();
+            document.getElementById('output').innerHTML = `
+                <h3>計算結果</h3>
+                <p><strong>選擇的景點:</strong> ${result.selected_spots.join(', ')}</p>
+                <p><strong>最佳路徑:</strong> ${result.path.join(' → ')}</p>
+                <p><strong>總距離:</strong> ${result.distance} 單位</p>
+            `;
+        }
+    </script>
+</head>
+<body>
+    <header>
+        Smart Tourist Route Planner
+    </header>
+    <main>
+        <h2>歡迎使用城市觀光路線規劃系統</h2>
+        <p>根據您的需求，系統將自動推薦最佳路線。</p>
+        <div class="map-container">
+            <h3>城市觀光地圖</h3>
+            <img src="/static/images/map.png" alt="City Map">
+        </div>
+        <div class="form-container">
+            <label for="maxSpots">選擇想參訪的景點數量：</label>
+            <input type="number" id="maxSpots" min="1" max="6" value="3">
+            <button onclick="calculateRoute()">計算路徑</button>
+        </div>
+        <div id="output">
+            <h3>計算結果將顯示在這裡</h3>
+        </div>
+    </main>
+    <footer>
+        &copy; 2025 Smart Tourist Route Planner. All rights reserved.<br>
+        111113201 數資三 蔣哿樂
+    </footer>    
+</body>
+</html>
